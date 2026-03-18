@@ -37,4 +37,11 @@ return [
         ],
     ],
 
+    'microsoft' => [
+        'client_id' => env('MS_CLIENT_ID'),
+        'client_secret' => env('MS_CLIENT_SECRET'),
+        'redirect' => env('MS_REDIRECT_URI'),
+        'tenant_id' => env('MS_TENANT_ID'),
+    ],
+
 ];

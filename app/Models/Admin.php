@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\AdminFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Config;
 
 class Admin extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<\Database\Factories\AdminFactory> */
+    /** @use HasFactory<AdminFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -52,5 +54,45 @@ class Admin extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
+    }
+
+    public function applyCustomSmtpConfig(): bool
+    {
+        $accessToken = $this->custom_fields['smtp_access_token'] ?? null;
+        $email = $this->custom_fields['smtp_email'] ?? null;
+
+        if (empty($accessToken) || empty($email)) {
+            return false;
+        }
+
+        $overrides = array_filter([
+            'scheme' => Config::get('mail.mailers.custom_smtp.scheme'),
+            'url' => Config::get('mail.mailers.custom_smtp.url'),
+            'host' => Config::get('mail.mailers.custom_smtp.host'),
+            'port' => Config::get('mail.mailers.custom_smtp.port'),
+
+            'username' => $email,
+            'password' => $accessToken,
+
+            'timeout' => $this->custom_fields['smtp_timeout'] ?? null,
+            'local_domain' => $this->custom_fields['smtp_local_domain'] ?? null,
+        ], static fn ($value) => ! is_null($value) && $value !== '');
+
+        if ($overrides === []) {
+            return false;
+        }
+
+        $base = config('mail.mailers.smtp', []);
+
+        Config::set('mail.mailers.custom_smtp', array_replace($base, $overrides));
+
+        return true;
+    }
+
+    public function getGeneratedPassword($accessToken, $email): ?string
+    {
+        $authString = "user={$email}\x01auth=Bearer {$accessToken}\x01\x01";
+
+        return base64_encode($authString);
     }
 }
