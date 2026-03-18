@@ -18,6 +18,8 @@ class Settings extends Page
 
     protected string $view = 'filament.pages.settings';
 
+    protected static ?string $navigationLabel = 'SMTP Settings';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::WrenchScrewdriver;
 
     protected static ?int $navigationSort = 3;
