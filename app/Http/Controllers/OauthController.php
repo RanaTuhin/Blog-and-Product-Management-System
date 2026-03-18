@@ -43,6 +43,6 @@ class OauthController extends Controller
             'custom_fields' => array_merge($existingCredentials, $response),
         ]);
 
-        return redirect()->route('filament.admin.pages.my-profile');
+        return redirect()->route('filament.admin.pages.settings');
     }
 }

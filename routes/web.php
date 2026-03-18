@@ -14,6 +14,6 @@ Route::middleware(['auth:admin'])
         Route::get('/oauth/microsoft/redirect', [OauthController::class, 'redirectMicrosoft'])
             ->name('oauth.microsoft.redirect');
 
-        Route::get('/oauth/microsoft/callback', [OauthController::class, 'callbackMicrosoft'])
+        Route::get('/microsoft/callback', [OauthController::class, 'callbackMicrosoft'])
             ->name('oauth.microsoft.callback');
     });

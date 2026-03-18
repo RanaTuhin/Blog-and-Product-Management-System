@@ -18,7 +18,7 @@ class OauthClient
             'response_type' => 'code',
             'redirect_uri' => route('oauth.microsoft.callback'),
             'response_mode' => 'query',
-            'scope' => 'offline_access Mail.Send User.Read',
+            'scope' => 'offline_access https://graph.microsoft.com/.default',
             'state' => csrf_token(),
         ]);
 
