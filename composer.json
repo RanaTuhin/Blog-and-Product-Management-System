@@ -8,7 +8,6 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "^4.0",
-        "innoge/laravel-msgraph-mail": "^1.5",
         "joaopaulolndev/filament-edit-profile": "^2.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",

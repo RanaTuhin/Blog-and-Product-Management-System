@@ -13,6 +13,10 @@ class MicrosoftServiceProvider extends BaseServiceProvider
             return new OauthClient;
         });
 
+        $this->app->singleton('mail', function (Application $app) {
+            return new OauthClient;
+        });
+
     }
 
     public function boot(): void {}
