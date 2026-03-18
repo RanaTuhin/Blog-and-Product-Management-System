@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('admins', function (Blueprint $table) {
-            $table->json('custom_columns')->nullable();
+            $table->json('custom_fields')->nullable();
         });
     }
 };

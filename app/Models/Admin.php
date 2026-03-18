@@ -50,7 +50,7 @@ class Admin extends Authenticatable implements FilamentUser, HasAvatar
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'custom_columns' => 'array',
+            'custom_fields' => 'array',
         ];
     }
 

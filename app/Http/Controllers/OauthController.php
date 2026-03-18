@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Microsoft\Controllers;
+namespace App\Http\Controllers;
 
 use App\Microsoft\Facades\Microsoft;
 use Exception;
@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-class OAuthController
+class OauthController extends Controller
 {
     public function redirectMicrosoft(): RedirectResponse
     {
