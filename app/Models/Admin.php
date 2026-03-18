@@ -6,13 +6,15 @@ namespace App\Models;
 
 use Database\Factories\AdminFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 
-class Admin extends Authenticatable implements FilamentUser
+class Admin extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<AdminFactory> */
     use HasFactory, Notifiable;
@@ -48,6 +50,7 @@ class Admin extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'custom_columns' => 'array',
         ];
     }
 
@@ -94,5 +97,12 @@ class Admin extends Authenticatable implements FilamentUser
         $authString = "user={$email}\x01auth=Bearer {$accessToken}\x01\x01";
 
         return base64_encode($authString);
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        $avatarColumn = config('filament-edit-profile.avatar_column', 'avatar_url');
+
+        return $this->$avatarColumn ? Storage::disk('public')->url($this->$avatarColumn) : null;
     }
 }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Livewire\SmtpSettingsForm;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -19,7 +21,10 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Joaopaulolndev\FilamentEditProfile\Pages\EditProfilePage;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -57,6 +62,31 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->userMenuItems([
+                'profile' => MenuItem::make()
+                    ->label(fn () => Auth::user()->name)
+                    ->url(fn (): string => EditProfilePage::getUrl())
+                    ->icon('heroicon-m-user-circle'),
+            ])
+            ->plugins([
+                FilamentEditProfilePlugin::make()
+                    ->slug('my-profile')
+                    ->setTitle('My Profile')
+                    ->setNavigationLabel('My Profile')
+                    ->setNavigationGroup('Group Profile')
+                    ->setIcon('heroicon-o-user')
+                    ->setSort(10)
+                    ->shouldRegisterNavigation(false)
+                    ->shouldShowDeleteAccountForm(false)
+                    ->shouldShowBrowserSessionsForm()
+                    ->shouldShowAvatarForm(
+                        value: true,
+                        directory: 'avatars',
+                    )
+                    ->customProfileComponents([
+                        'smtp_settings_form' => SmtpSettingsForm::class,
+                    ]),
             ]);
     }
 }
